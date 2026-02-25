@@ -1,13 +1,24 @@
 import { Request, Response, NextFunction } from 'express';
 import * as admin from 'firebase-admin';
-import * as serviceAccount from '../../react-native-test-app-2210e-firebase-adminsdk-fbsvc-e2501865f8.json';
+
 
 // Initialize Firebase Admin
 if (!admin.apps.length) {
-    admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount as admin.ServiceAccount)
-    });
-    console.log('Firebase Admin initialized');
+    try {
+        const serviceAccount = {
+            projectId: process.env.FIREBASE_PROJECT_ID,
+            clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+            // Handle the private key format correctly
+            privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+        };
+
+        admin.initializeApp({
+            credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+        });
+        console.log('✅ Firebase Admin initialized from environment variables');
+    } catch (error) {
+        console.error('❌ Firebase Admin initialization error:', error);
+    }
 }
 
 export interface AuthRequest extends Request {
