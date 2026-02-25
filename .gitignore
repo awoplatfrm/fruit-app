@@ -2,3 +2,11 @@ node_modules/
 .env
 dist/
 .DS_Store
+
+# Firebase credentials
+react-native-test-app-*.json
+service-account-key.json
+*.json
+!.env.example
+!package.json
+!tsconfig.json
